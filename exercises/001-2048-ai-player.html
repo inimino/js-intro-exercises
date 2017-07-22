@@ -1,0 +1,287 @@
+<style>
+div.Game {
+}
+
+div.Row {
+  display:flex;
+  justify-content:center
+}
+
+div.Cell {
+  color:white;
+  font:24px sans-serif;
+  text-align:center;
+  margin:4px;
+  padding:20px 4px;
+  border:4px solid #aaa;
+  width:64px;
+  height:32px;
+  background:#ccc;
+}
+
+div.Cell.val-0 {}
+div.Cell.val-2 {background:#aaf;border-color:#00f}
+div.Cell.val-4 {background:#88f;border-color:#007}
+div.Cell.val-8 {background:#00f;border-color:#007}
+div.Cell.val-16 {background:#5eb;border-color:#0a4}
+div.Cell.val-32 {background:#098;border-color:#031}
+div.Cell.val-64 {background:#054;border-color:#020}
+div.Cell.val-128 {background:#fd6;border-color:#ed2}
+div.Cell.val-256 {background:#ed0;border-color:#fe1}
+div.Cell.val-512 {background:#da0;border-color:#ed2}
+div.Cell.val-1024 {background:#b5a;border-color:#109}
+div.Cell.val-2048 {background:#109;border-color:#00f}
+
+div.topbar{
+  display:flex;
+  flex-flow:column;
+  align-items:center;
+  padding:16px
+}
+
+span.score{
+  margin:4px 16px
+}
+
+div.controls{
+  margin:32px auto;
+  display:flex;
+  flex-flow:column nowrap;
+  align-items:center;
+  width:256px
+}
+
+div.controls button {
+  height:64px;
+  width:64px;
+  margin:4px
+}
+
+div.error {color:red}
+</style>
+
+<div id=container>
+</div>
+
+<section id=instructions>
+  <h3>Instructions</h3>
+  <p>For this exercise, you will write an AI to play the game 2048.
+
+  <p>You can see what the game 2048 looks like <a href="https://duckduckgo.com/?q=2048&t=osx&ia=answer">on DuckDuckGo</a> or <a href=/2048>here</a>.
+
+  <p>Create a function `ai_player` which takes the game as an argument, and returns a string which is either `up`, `down`, `left`, or `right`.
+  <p>For example, the following creates a simple but determined AI player with a strong preference for moves to the left:
+  <pre><code>
+    function ai_player(game){
+      return 'left';
+    }
+  </code></pre>
+  <p>Once you have written your ai_player function, click the autoplay button to run it and see how well it can score!
+  <p>You may use the following functions to help you in your quest:
+  <ul>
+    <li>move(game,mv)
+      <p>Applies the move <code>mv</code> to <code>game</code>, mutating it. This is the same code used by the game itself to determine the result of your move. It calls <code>move_only()</code> and <code>randomly_add_tile()</code>, which are also provided separately in case you want to use them in your AI logic.
+    <li>move_only(game,mv)
+    <li>randomly_add_tile(game)
+    <li>copy(game)
+    <li>iter_cells(game,callback)
+      <p>This takes a callback function <code>callback</code> and calls it for each cell in the game board. The callback function will be called with four arguments: cell, i, j, k, where cell is the value of the cell (either 0 if the cell is empty, or 2, 4, 8, etc) and i,j are the row and column position respectively (0,0 is the top left) and k is the index of the cell as a single number equal to i * width + j.
+    <li>at_ij(game,i,j,[val])
+    <li>at_k(game,k,[val])
+    <li>legal_moves
+      <p>This is not a function but an array of the legal moves, which are accepted by the <code>move()</code> and <code>move_only()</code> functions.
+      <p><code>var legal_moves=['up','down','left','right']</code>
+  </ul>
+</section>
+
+# JSX
+
+function init(){
+  var game,i,j,row
+  game=
+    {width:4
+    ,height:4
+    ,rows:[]
+    ,score:0
+    ,autoplay_fail_count:0
+    }
+  game.rows=empty_board(game)
+  randomly_add_tile(game)
+  return game
+}
+
+function copy(game){
+  var ret=Object.assign({},game)
+  ret.rows=empty_board(game)
+  iter_cells(ret,(c,i,j,k) => at_k(game,k))
+  return ret}
+
+function empty_board(game){
+  var rows=[]
+  for(i=0; i<game.height; i++){
+    rows.push(row=[])
+    for(j=0; j<game.width; j++){row.push(0)}}
+  return rows
+}
+
+function randomly_add_tile(game){
+  var empty=0
+  iter_cells(game,c => {if(c==0) empty++})
+  if(!empty) return false
+  var chosen = Math.floor(Math.random()*empty)
+  var seen = 0
+  iter_cells(game,(c,i,j,k) => {
+    if(c != 0) return
+    if(seen++==chosen) return 2
+  })
+  return true
+}
+
+function iter_cells(game,f){
+  game.rows.forEach((r,i) => r.forEach((c,j) => {
+    var ret = f(c,i,j,i*game.width+j)
+    if(typeof ret == "number") game.rows[i][j] = ret}))}
+
+function at_ij(game,i,j,c){
+  if(i<0 || j<0 || i>=game.height || j>=game.width) return
+  if(c!=undefined) game.rows[i][j]=c
+  return game.rows[i][j]}
+
+function at_k(game,k,c){
+  if(k < 0 || k > game.width*game.height) return
+  if(c!=undefined) game.rows[Math.floor(k/game.width)][k%game.width]=c
+  return game.rows[Math.floor(k/game.width)][k%game.width]}
+
+function move_only(game,mov){
+  var x,y
+  switch(mov){
+  case "up": x=0;y=-1;break
+  case "down": x=0;y=1;break
+  case "left": x=-1;y=0;break
+  case "right": x=1;y=0;break
+  default: throw new Error('unknown move: '+mov)}
+  var moved,transposed,flipped
+  if(y != 0){
+    ;[x,y] = [y,x]
+    transpose(game)
+    transposed=true
+  }
+  if(x==1){
+    x=-1
+    flip_x(game)
+    flipped=true
+  }
+  moved = move_left(game)
+  if(flipped) flip_x(game)
+  if(transposed) transpose(game)
+  return moved}
+
+function move(game,mov){
+  var moved=move_only(game,mov)
+  if(moved) randomly_add_tile(game)
+  render(game)
+  return moved
+}
+
+function move_left(game){
+  var moved=false
+  moved = move_left_many(game)
+  moved = merge_left_once(game) || moved
+  moved = move_left_many(game) || moved
+  return moved}
+
+function move_left_many(game){
+  var moved=false, count=0
+  while(move_left_once(game)) moved=true;
+  return moved}
+
+function move_left_once(game){
+  var moved=false
+  iter_cells(game,(c,i,j,k) => {
+    if(c==0) return
+    var left=at_ij(game,i,j-1)
+    if(left==0){
+      at_ij(game,i,j-1,c)
+      at_k(game,k,0)
+      moved=true
+    }
+  })
+  return moved
+}
+
+function merge_left_once(game){
+  var merged=false
+  iter_cells(game,(c,i,j,k) => {
+    if(c==0)return
+    var left=at_ij(game,i,j-1)
+    if(left==c){
+      at_ij(game,i,j-1,c*2)
+      at_k(game,k,0)
+      merged=true
+      game.score+=c*2
+    }
+  })
+  return merged
+}
+
+function transpose(game){
+  var next=copy(game)
+  next.width=game.height
+  next.height=game.width
+  next.rows=empty_board(next)
+  iter_cells(next,(c,i,j,k) => at_ij(game,j,i))
+  //alert(JSON.stringify(game)+'\n'+JSON.stringify(next))
+  Object.assign(game,next)
+}
+
+function flip_x(game){
+  var next=copy(game)
+  iter_cells(next,(c,i,j,k) => at_ij(game,i,game.width-1-j))
+  Object.assign(game,next)
+}
+
+function Row(props){
+  return <div className="Row">
+    {props.cells.map(c => <Cell n={c}/>)}
+  </div>}
+
+function Cell(props){
+  return <div className={"Cell val-"+props.n}>{props.n||""}</div>}
+
+var error_message=""
+
+var game
+
+function new_game(){
+  game=init()
+  render(game)}
+
+function auto_play(){
+  //new_game()
+  setTimeout(auto_play_step,1000)}
+
+var results=[]
+
+function save_result(game){
+  results.push(game.score)
+}
+
+function auto_play_step(){
+  var moved
+  try{moved=move(game,ai_player(game))}
+  catch(e){error_message = String(e);render(game);return}
+  game.autoplay_fail_count = moved?0:game.autoplay_fail_count+1
+  if(game.autoplay_fail_count<16) setTimeout(auto_play_step,100)
+  else{
+    save_result(game)
+    new_game()
+    auto_play()
+  }
+}
+
+function render(game){
+  ReactDOM.render(<TwentyFortyEight game={game} results={results}/>,document.querySelector('#container'))}
+
+var legal_moves=['up','down','left','right']
+
+new_game()

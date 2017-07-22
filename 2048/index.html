@@ -1,0 +1,535 @@
+<style>
+div.Game {
+}
+
+div.Row {
+  display:flex;
+  justify-content:center
+}
+
+div.Cell {
+  color:white;
+  font:24px sans-serif;
+  text-align:center;
+  margin:4px;
+  padding:20px 4px;
+  border:4px solid #aaa;
+  width:64px;
+  height:32px;
+  background:#ccc;
+}
+
+div.Cell.val-0 {}
+div.Cell.val-2 {background:#aaf;border-color:#00f}
+div.Cell.val-4 {background:#88f;border-color:#007}
+div.Cell.val-8 {background:#00f;border-color:#007}
+div.Cell.val-16 {background:#5eb;border-color:#0a4}
+div.Cell.val-32 {background:#098;border-color:#031}
+div.Cell.val-64 {background:#054;border-color:#020}
+div.Cell.val-128 {background:#fd6;border-color:#ed2}
+div.Cell.val-256 {background:#ed0;border-color:#fe1}
+div.Cell.val-512 {background:#da0;border-color:#ed2}
+div.Cell.val-1024 {background:#b5a;border-color:#109}
+div.Cell.val-2048 {background:#109;border-color:#00f}
+
+div.topbar{
+  display:flex;
+  flex-flow:column;
+  align-items:center;
+  padding:16px
+}
+
+span.score{
+  margin:4px 16px
+}
+
+div.controls{
+  margin:32px auto;
+  display:flex;
+  flex-flow:column nowrap;
+  align-items:center;
+  width:256px
+}
+
+div.controls button {
+  height:64px;
+  width:64px;
+  margin:4px
+}
+
+div.error {color:red}
+</style>
+
+<div id=container>
+</div>
+
+<script src=react.js></script><script src=react-dom.js></script>
+<script>
+function init() {
+  var game;
+  game = { width: 4,
+    height: 4,
+    rows: [],
+    score: 0,
+    autoplay_fail_count: 0,
+    last_move_effect: true
+  };
+  game.rows = empty_board(game);
+  game = randomly_add_tile(game);
+  return game;
+}
+
+function copy(game) {
+  var ret = Object.assign({}, game);
+  ret.rows = empty_board(game);
+  iter_cells(ret, (c, i, j, k) => at_k(game, k));
+  return ret;
+}
+
+function empty_board(game) {
+  var rows = [];
+  for (i = 0; i < game.height; i++) {
+    rows.push(row = []);
+    for (j = 0; j < game.width; j++) {
+      row.push(0);
+    }
+  }
+  return rows;
+}
+
+function randomly_add_tile(game) {
+  var empty = 0,
+      cp;
+  cp = copy(game);
+  iter_cells(cp, c => {
+    if (c == 0) empty++;
+  });
+  if (!empty) return cp;
+  var chosen = Math.floor(Math.random() * empty);
+  var seen = 0;
+  iter_cells(cp, (c, i, j, k) => {
+    if (c != 0) return cp;
+    if (seen++ == chosen) return Math.random() > 0.9 ? 4 : 2;
+  });
+  return cp;
+}
+
+function iter_cells(game, f) {
+  game.rows.forEach((r, i) => r.forEach((c, j) => {
+    var ret = f(c, i, j, i * game.width + j);
+    if (typeof ret == "number") game.rows[i][j] = ret;
+  }));
+}
+
+function at_ij(game, i, j, c) {
+  if (i < 0 || j < 0 || i >= game.height || j >= game.width) return;
+  if (c != undefined) game.rows[i][j] = c;
+  return game.rows[i][j];
+}
+
+function at_k(game, k, c) {
+  if (k < 0 || k > game.width * game.height) return;
+  if (c != undefined) game.rows[Math.floor(k / game.width)][k % game.width] = c;
+  return game.rows[Math.floor(k / game.width)][k % game.width];
+}
+
+function is_lost(game) {
+  return !legal_moves.some(m => move_only(game, m).last_move_effect);
+}
+
+function move_only(game, mov) {
+  var x, y, cp;
+  cp = copy(game);
+  switch (mov) {
+    case "up":
+      x = 0;y = -1;break;
+    case "down":
+      x = 0;y = 1;break;
+    case "left":
+      x = -1;y = 0;break;
+    case "right":
+      x = 1;y = 0;break;
+    default:
+      throw new Error('unknown move: ' + mov);}
+  var moved, transposed, flipped;
+  if (y != 0) {
+    ;[x, y] = [y, x];
+    transpose(cp);
+    transposed = true;
+  }
+  if (x == 1) {
+    x = -1;
+    flip_x(cp);
+    flipped = true;
+  }
+  moved = move_left(cp);
+  if (flipped) flip_x(cp);
+  if (transposed) transpose(cp);
+  cp.last_move_effect = moved;
+  return cp;
+}
+
+function move(game, mov) {
+  var cp = move_only(game, mov);
+  if (cp.last_move_effect) cp = randomly_add_tile(cp);
+  return cp;
+}
+
+function move_render(mov) {
+  game = move(game, mov);
+  render();
+}
+
+function move_left(game) {
+  var moved = false;
+  moved = move_left_many(game);
+  moved = merge_left_once(game) || moved;
+  moved = move_left_many(game) || moved;
+  return moved;
+}
+
+function move_left_many(game) {
+  var moved = false,
+      count = 0;
+  while (move_left_once(game)) moved = true;
+  return moved;
+}
+
+function move_left_once(game) {
+  var moved = false;
+  iter_cells(game, (c, i, j, k) => {
+    if (c == 0) return;
+    var left = at_ij(game, i, j - 1);
+    if (left == 0) {
+      at_ij(game, i, j - 1, c);
+      at_k(game, k, 0);
+      moved = true;
+    }
+  });
+  return moved;
+}
+
+function merge_left_once(game) {
+  var merged = false;
+  iter_cells(game, (c, i, j, k) => {
+    if (c == 0) return;
+    var left = at_ij(game, i, j - 1);
+    if (left == c) {
+      at_ij(game, i, j - 1, c * 2);
+      at_k(game, k, 0);
+      merged = true;
+      game.score += c * 2;
+    }
+  });
+  return merged;
+}
+
+function transpose(game) {
+  var next = copy(game);
+  next.width = game.height;
+  next.height = game.width;
+  next.rows = empty_board(next);
+  iter_cells(next, (c, i, j, k) => at_ij(game, j, i)
+  //alert(JSON.stringify(game)+'\n'+JSON.stringify(next))
+  );Object.assign(game, next);
+}
+
+function flip_x(game) {
+  var next = copy(game);
+  iter_cells(next, (c, i, j, k) => at_ij(game, i, game.width - 1 - j));
+  Object.assign(game, next);
+}
+
+function Row(props) {
+  return React.createElement(
+    "div",
+    { className: "Row" },
+    props.cells.map((c, i) => React.createElement(Cell, { key: i, n: c }))
+  );
+}
+
+function Cell(props) {
+  return React.createElement(
+    "div",
+    { className: "Cell val-" + props.n },
+    props.n || ""
+  );
+}
+
+function TwentyFortyEight(props) {
+  var game = props.game;
+  return React.createElement(
+    "div",
+    { className: "Game" },
+    React.createElement(
+      "div",
+      { className: "topbar" },
+      React.createElement(
+        "span",
+        { className: "score" },
+        game.score
+      ),
+      " ",
+      React.createElement(
+        "button",
+        { onClick: new_game },
+        "New"
+      ),
+      React.createElement(
+        "button",
+        { onClick: auto_play },
+        "autoplay"
+      )
+    ),
+    game.rows.map((r, i) => React.createElement(Row, { key: i, cells: r, game: game })),
+    React.createElement(
+      "div",
+      { className: "controls" },
+      React.createElement("button", { onClick: up }),
+      React.createElement(
+        "div",
+        null,
+        React.createElement("button", { onClick: left }),
+        React.createElement("button", { onClick: down }),
+        React.createElement("button", { onClick: right })
+      )
+    )
+  );
+  function up() {
+    move_render('up');
+  }
+  function down() {
+    move_render('down');
+  }
+  function left() {
+    move_render('left');
+  }
+  function right() {
+    move_render('right');
+  }
+}
+
+function TwentyFortyEightAIRunner(props) {
+  var game = props.game,
+      results = props.results,
+      avg_score,
+      runs,
+      last_score,
+      tot = 0,
+      instructions;
+  results.forEach(n => tot += n);
+  runs = results.length;
+  avg_score = tot / runs || 0;
+  last_score = results[results.length - 1] || 0;
+  return React.createElement(
+    "div",
+    { className: "Game" },
+    React.createElement(
+      "div",
+      { className: "topbar" },
+      React.createElement(
+        "div",
+        null,
+        "runs: ",
+        runs,
+        " last: ",
+        last_score,
+        " avg: ",
+        avg_score
+      ),
+      React.createElement(
+        "div",
+        null,
+        React.createElement(
+          "span",
+          { className: "score" },
+          game.score
+        ),
+        " ",
+        React.createElement(
+          "button",
+          { onClick: auto_play },
+          "autoplay"
+        )
+      ),
+      React.createElement(
+        "div",
+        { className: "error" },
+        error_message
+      )
+    ),
+    game.rows.map((r, i) => React.createElement(Row, { key: i, cells: r, game: game }))
+  );
+}
+
+var game;
+
+var error_message = "";
+
+var results = [];
+
+function save_result(game) {
+  results.push(game.score);
+}
+
+function new_game() {
+  game = init();
+  render();
+}
+
+function auto_play() {
+  //new_game()
+  setTimeout(auto_play_step, 500);
+}
+
+function auto_play_step() {
+  try {
+    move_render(ai_player(game));
+  } catch (e) {
+    error_message = String(e);render();return;
+  }
+  game.autoplay_fail_count = game.last_move_effect ? 0 : game.autoplay_fail_count + 1;
+  var delay = AI_EXERCISE ? 50 : 250;
+  if (game.autoplay_fail_count < 16) setTimeout(auto_play_step, delay);else if (AI_EXERCISE) {
+    save_result(game);
+    new_game();
+    auto_play();
+  }
+}
+
+function render() {
+  var component, container;
+  component = AI_EXERCISE ? React.createElement(TwentyFortyEightAIRunner, { game: game, results: results }) : React.createElement(TwentyFortyEight, { game: game });
+  container = document.querySelector('#container');
+  ReactDOM.render(component, container);
+}
+
+var legal_moves = ['up', 'down', 'left', 'right'];
+
+document.body.onkeydown = function (e) {
+  if (e.keyCode > 36 && e.keyCode < 41) e.preventDefault();
+  if (e.keyCode == 37) move_render('left');
+  if (e.keyCode == 38) move_render('up');
+  if (e.keyCode == 39) move_render('right');
+  if (e.keyCode == 40) move_render('down');
+};
+
+var AI_EXERCISE = true;
+
+setTimeout(() => new_game(), 0
+
+// end exercise
+
+);AI_EXERCISE = false;
+
+var ai_player = ai_player3;
+
+function measure_game(game) {
+  var ret = {};
+  ret.max = 2;
+  ret.badness = 0;
+  ret.space = game.width * game.height;
+  ret.score = 0;
+  iter_cells(game, (c, i, j, k) => {
+    if (c > ret.max) ret.max = c;
+    if (c) ret.space--;
+    ret.score += c * c * c * c * c * c;
+    ret.badness += f(c - at_ij(game, i - 1, j) || 0) + f(c - at_ij(game, i, j - 1) || 0) + f(c - at_ij(game, i + 1, j) || 0) + f(c - at_ij(game, i, j + 1) || 0);
+  });
+  function f(n) {
+    var abs = Math.abs(n);return abs * abs * abs;
+  }
+  return ret;
+}
+
+function ai_player3(game) {
+  var metrics, depth, results;
+  depth = 3;
+  results = [];
+  return go(game, 0)[0];
+  function go(game, level) {
+    var ret, best, best_move;
+    if (level == depth) {
+      return _ai_player3(game);
+    }
+    best_move = legal_moves[Math.floor(Math.random() * 4)];
+    best = [best_move, Infinity];
+    legal_moves.forEach(m => {
+      var cp, ret;
+      cp = move_only(game, m);
+      if (!cp.last_move_effect) return;
+      ret = go(cp, level + 1);
+      console.log(game.score, level, m, ret);
+      if (ret[1] < best[1]) {
+        best = [m, ret[1]];
+      }
+    });
+    return best;
+  }
+}
+
+function _ai_player3(game) {
+  var best, best_move, best_game;
+  best = Infinity;
+  best_move = legal_moves[Math.floor(Math.random() * 4)];
+  legal_moves.forEach(m => {
+    var cp, badness, metrics;
+    cp = move_only(game, m);
+    if (!cp.last_move_effect) return;
+    metrics = measure_game(cp);
+    badness = 2048 / metrics.space / metrics.score;
+    if (badness < best) {
+      best = badness;
+      best_game = cp;
+      best_move = m;
+    }
+  });
+  return [best_move, best];
+}
+
+function ai_player2(game) {
+  return _ai_player2(game)[0];
+}
+
+function _ai_player2(game) {
+  var best, best_move, best_game;
+  best = Infinity;
+  best_move = legal_moves[Math.floor(Math.random() * 4)];
+  legal_moves.forEach(m => {
+    var cp = copy(game),
+        badness,
+        metrics;
+    var moved = move_only(cp, m);
+    if (!moved) return;
+    metrics = measure_game(cp);
+    badness = metrics.badness / metrics.space / metrics.space / metrics.score;
+    if (badness < best) {
+      best = badness;
+      best_game = cp;
+      best_move = m;
+    }
+  });
+  return [best_move, best];
+}
+
+function ai_player1(game) {
+  function find_max(game) {
+    var max, max_move;
+    max = game.score;
+    max_move = legal_moves[Math.floor(Math.random() * 4)];
+    var cp;
+    legal_moves.forEach(m => {
+      cp = copy(game);
+      move(cp, m);
+      if (cp.score > max) {
+        max = cp.score;
+        max_move = m;
+      }
+    });
+    return [max, max_move];
+  }
+  return find_max(game)[1];
+  return legal_moves[Math.floor(Math.random() * 4)];
+  return 'down';
+}
+</script>
