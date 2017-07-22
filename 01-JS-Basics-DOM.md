@@ -1,7 +1,3 @@
----
-layout: reveal
----
-
 # Introducing JavaScript
 
 ---
@@ -64,11 +60,18 @@ programming language." -- Stack Overflow survey
 
 # Tools
 
+ - JavaScript in the browser: use the console
+ - Pure JavaScript: use Play or JSBin
+ - Server-side: use Node
+
+We will take a closer look at these tools later today.
+
 ---
 
 # Further reading
 
  - [MDN JavaScript Docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+ - [Google Style Guide (very long)](https://google.github.io/styleguide/jsguide.html)
 
 ---
 
@@ -138,6 +141,10 @@ convenient, so you may not need jQuery these days.
 
 Let's do some live coding with pure JavaScript (no DOM until tomorrow).
 
+---
+
+## JavaScript Basics
+
 --
 
 ## Like Ruby, but different
@@ -150,11 +157,49 @@ Sometimes the JS way is entirely different.
 
 --
 
+## Ruby vs JS
+
+```ruby
+# comments start with hash (Unix tradition)
+a = [1,2] # local variables created by assignment
+# Ruby has "blocks" which are like inline anonymous functions
+a.keep_if{|n| n > 1}
+a.each {|n| puts n}
+h = {} # Ruby calls this a "hash"
+h['a'] = 42
+h.each {|key, value| puts "#{key} #{value}" }
+```
+
+```js
+// Comments start with two slashes
+/* or surrounded by slash-star markers (C syntax) */
+var a = [1,2] // variables must be declared
+// using let, const, or var
+// inline anonymous functions
+var b = a.filter(function(x){ return x > 1 })
+b = a.filter(x => x > 1) // ES6 arrow functions
+var o = {} // this is called an Object, not a hash
+o['a'] = 42 // this is a "property" of the object
+o.a = 42 // this is equivalent
+Object.keys(o).forEach(function(k){console.log(k+' '+o[k])})
+Object.keys(o).forEach(k => console.log(`${k} ${o[k]}`)) // ES6+
+```
+--
+
+## Further comparisons
+
+ - [http://agentcooper.io/js-ruby-comparison/]()
+
+--
+
 ## Tools
 
- - JSBin
- - Node
- - Browser console
+ - [JSBin](http://jsbin.com/)
+ - [Node](https://nodejs.org/)
+ - Browser console:
+   - [Firefox](https://developer.mozilla.org/en-US/docs/Tools/Web_Console)
+   - [Chrome](https://developers.google.com/web/tools/chrome-devtools/console/)
+   - [Safari](https://developer.apple.com/library/content/documentation/AppleApplications/Conceptual/Safari_Developer_Guide/Console/Console.html)
  - [Play](https://play.inimino.org/)
 
 --
@@ -218,3 +263,7 @@ environment (browser or Node).
 
  - up/down counter exercise without DOM
    - event handling, the event loop
+
+--
+
+## Happy Hacking!
