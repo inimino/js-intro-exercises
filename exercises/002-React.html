@@ -25,5 +25,51 @@ It only looks at the game object, and creates a new game object.
 
 <script>
 document.querySelector('#start').value=
-
+"<!doctype html>\n<title>2048</title>\n<link rel=stylesheet href=\"https://inimino.github.io/js-intro-exercises/lib/2048.css\">\n<script src=\"https://inimino.github.io/js-intro-exercises/lib/2048.js\"></scr"+"ipt>\n\n<div id=container>\n</div>\n\n<script>\n  // start here\n</scr"+"ipt>"
 </script>
+
+<p>We aren't using any Play features, this is just a plain HTML file. So you can also paste it into an HTML file locally and use Sublime Text if you prefer.
+
+<p>Notice the HTML includes a CSS file and a JS file already.
+
+<p>The CSS is to save you time styling the game tiles, and the JS library implements the game logic.
+What you need to write is the UI, or the view layer in MVC terms.
+
+<p>The JavaScript library provides two functions you will need:
+
+<ul>
+<li>create_game()
+<p>This creates a new game object. You will need to call this function once when the page is loaded.
+<li>move(game, name)
+<p>The move() function takes a game object and a move name, which can be either "up", "down", "left", or "right". You may remember it from the 2048 AI exercise yesterday.
+
+<p>First, you're going to need to create an object to store the state of the game.
+You might as well create a variable, call it <code>game</code>, and use create_game() to initialize it.
+
+<p>Next you are going to need to write a function that takes the game object and renders it as HTML.
+You should name this function render(), and you might as well give it the DOM element to render into as a second argument.
+
+<p>You should call this render(game,element) function once, and it should render your UI into the element provided.
+For this you can use the DOM methods like element.innerHTML, element.appendChild, document.createElement.
+Check <a href="https://inimino.github.io/js-intro-exercises/lib/2048.css">the CSS</a> to see what elements and classes to use.
+You should create a &lt;div class="Row"> for each row in the game board, and fill it with &lt;div class="Cell"> divs, adding the "val-0" or "val-2" through "val-2048" classes as appropriate.
+
+<p>When the game starts, the board is empty except for one randomly placed 2 or 4 tile.
+You need to show that state, which means you need to write some code that generates HTML from your game state.
+If you wanted, you could also write code to update the board every time the player moves.
+You could move your HTML elements around, or change the attributes of the elements in place.
+Instead of that, we are going to use the same function to show the initial state of the page and to show the state again after every change.
+
+<p>To make the game playable, you should add four buttons, up, down, left, and right.
+Style and place them using CSS.
+
+<p>When a button is pushed, use the move() function to get the updated state of the game.
+Then call your render(game,element) function again!
+Now you have a playable game!
+
+<p>When you are done it should look something like the <a href="https://inimino.github.io/js-intro-exercises/2048/">demo version.</a>
+
+<p>Optionally, you can add a "new game" button, which should create a new game and render it.
+
+<p>If you finish all the above, you can also add an "autoplay" button.
+There is also an ai_player() function provided by the JS library, you can use this to get the next move, then apply the move as usual, render, and set a timeout to get the next move and repeat the whole process.
