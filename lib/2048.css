@@ -1,0 +1,31 @@
+div.Game {
+}
+
+div.Row {
+  display:flex;
+  justify-content:center
+}
+
+div.Cell {
+  font:24px sans-serif;
+  text-align:center;
+  margin:4px;
+  padding:20px 4px;
+  border:4px solid #aaa;
+  width:64px;
+  height:32px;
+  background:#ccc;
+}
+
+div.Cell.val-0 {}
+div.Cell.val-2 {background:#aaf;border-color:#00f}
+div.Cell.val-4 {background:#88f;border-color:#007}
+div.Cell.val-8 {background:#00f;border-color:#007}
+div.Cell.val-16 {background:#5eb;border-color:#0a4}
+div.Cell.val-32 {background:#098;border-color:#031}
+div.Cell.val-64 {background:#054;border-color:#020}
+div.Cell.val-128 {background:#fd6;border-color:#ed2}
+div.Cell.val-256 {background:#ed0;border-color:#fe1}
+div.Cell.val-512 {background:#da0;border-color:#ed2}
+div.Cell.val-1024 {background:#b5a;border-color:#109}
+div.Cell.val-2048 {background:#109;border-color:#00f}
