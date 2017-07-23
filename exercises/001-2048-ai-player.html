@@ -84,16 +84,21 @@
   </ul>
 
   <p>The random player approach is the easiest.
-  The random player is very consistent.
-  It almost always gets a similar result.
+  Even though the play is random, the results of the random player are surprisingly consistent.
   To move randomly, you don't need to look at the game object at all.
   You can use Math.random() to get a random number, and then use this to choose one of the moves at random.
-  The legal_moves array may make this more convenient.
+  The legal_moves array can help.
+  Use Math.random() to get a number between 0 and 1, and then multiply by four and use Math.floor() to get a number that is either 0, 1, 2, or 3.
+  Use this number as an index into the legal_moves array.
 
   <p>If you have extra time, here are some other ideas you can try:
 
   <p>Now you have a random player, and you have the is_lost() function provided.
   You could combine these to make random moves until the game is lost.
+  Actually ... that is what we are doing now, but you could do it inside your ai_player function, on each move, before deciding which move to make.
   By counting the number of moves before losing, it would give you a cheap and simple way of evaluating a position.
-  In other words, you could try moving left, right, up, down, and for each of these, use the move() function to get a new game positions, and then play random moves until losing, and then choose the one that loses last.
-  Since both the moves and the tiles are being added randomly, this process relies on chance and won't give the same results every time.
+  In other words, you could try moving left, right, up, down, and for each of these new positions, make random moves until losing, and then choose the one that loses after the longest streak of moves.
+  Since both the moves and the tiles are being added randomly, this process relies on chance, but it will give you better results than the fully random player.
+
+  <p>For an even better player, there are lots of techniques we can use from AI.
+  <a href=https://en.wikipedia.org/wiki/Minimax>Minimax search</a> is a good one to look into here.
