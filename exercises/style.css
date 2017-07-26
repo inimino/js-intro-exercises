@@ -4,6 +4,9 @@ body {
   color: #24292e;
   background: #eaeaea;
   font-family: "Helvetica", "sans-serif";
+  max-width: 40em;
+  margin: 0 auto;
+  padding: 4em;
 }
 
 h1 {
