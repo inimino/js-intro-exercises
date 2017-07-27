@@ -220,6 +220,8 @@ function MyUI(){
 ReactDOM.render(<MyUI/>, document.querySelector('#container'))
 ```
 
+--
+
 Components are Capitalized to distinguish them from ordinary HTML elements.
 
 Components are like UI building blocks that you can use and re-use to 
