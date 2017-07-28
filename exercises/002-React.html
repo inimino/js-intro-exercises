@@ -83,23 +83,16 @@ render(html, container)
 
 <h3>Make the game playable</h3>
 
-<p>You can make the game playable using the keyboard.
-
-<p>First, you will add a keyup event listener to the body element.
-This will capture your keyboard events from the whole page.
+<p>There are four buttons on the page, with id of "up" "left" "down" and "right".
+You need to add event listeners to each one of these buttons.
 
 <pre><code>
-document.body.addEventListener('keyup',function(event){
-  alert(event.keyCode)
-});
-</code></pre>
+var up_button = document.querySelector('#up')
+up_button.addEventListener('click',up_clicked)
 
-<p>Use this code to find out the keyCode values for the up, down, left, and right arrow keys.
-
-
-
-<p>To make the game playable with buttons, you should add four buttons, up, down, left, and right.
-Style and place them using CSS.
+function up_clicked(){
+  // your code here
+}</code></pre>
 
 <p>When a button is pushed, use the move() function to get the updated state of the game.
 This should look something like <code>game = move(game,move_type)</code>.
@@ -112,6 +105,18 @@ Now you have a playable game!
 
 <p>Optionally, you can add a "new game" button, which should create a new game and render it.
 
+<p>You can make the game playable using the keyboard.
+
+<p>First, you will add a keyup event listener to the body element.
+This will capture your keyboard events from the whole page.
+
+<pre><code>
+document.body.addEventListener('keyup',function(event){
+  alert(event.keyCode)
+});
+</code></pre>
+
+<p>Use this code to find out the keyCode values for the up, down, left, and right arrow keys.
 <p>You can add an "onkeydown" handler to the document to support keyboard input and play with the arrow keys.
 <p>If you finish all the above, you can also add an "autoplay" button.
 There is also an ai_player() function provided by the JS library, you can use this to get the next move, then apply the move as usual, render, and set a timeout to get the next move and repeat the whole process.
