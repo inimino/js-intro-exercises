@@ -50,12 +50,13 @@ What you need to write is the UI, or the view layer in MVC terms.
 You might as well create a variable, call it <code>game</code>, and use create_game() to initialize it.
 
 <p>Next you are going to need to write a function that takes the game object and renders it as HTML.
-You should name this function render(), and you might as well give it the DOM element to render into as a second argument.
-
-<p>You should call this render(game,element) function once, and it should render your UI into the element provided.
-For this you can use the DOM methods like element.innerHTML, element.appendChild, document.createElement.
+You could call this function game_html(), and it should take the game object as an argument, and return an HTML string.
 Check <a href="https://inimino.github.io/js-intro-exercises/lib/2048.css">the CSS</a> to see what elements and classes to use.
 You should create a &lt;div class="Row"> for each row in the game board, and fill it with &lt;div class="Cell"> divs, adding the "val-0" or "val-2" through "val-2048" classes as appropriate.
+
+<p>Next you should write a function to take your HTML string and inject it into the page, with innerHTML on the container div.
+You can call this function <code>render(html, element)</code> and pass the container element to it as the second argument.
+Your render function will just set <code>element.innerHTML = html</code>.
 
 <p>When the game starts, the board is empty except for one randomly placed 2 or 4 tile.
 You need to show that state, which means you need to write some code that generates HTML from your game state.
@@ -64,7 +65,8 @@ You need to show that state, which means you need to write some code that genera
 Style and place them using CSS.
 
 <p>When a button is pushed, use the move() function to get the updated state of the game.
-Then call your render(game,element) function again!
+This should look something like <code>game = move(game,move_type)</code>.
+Then call your game_html() function again to get the new HTML, and your render() function again to display the HTML on the page.
 Now you have a playable game!
 
 <p>When you are done it should look something like the <a href="https://inimino.github.io/js-intro-exercises/2048/">demo version.</a>
