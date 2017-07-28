@@ -25,7 +25,7 @@ It only looks at the game object, and creates a new game object.
 
 <script>
 document.querySelector('#start').value=
-"<!doctype html>\n<title>2048</title>\n<link rel=stylesheet href=\"https://inimino.github.io/js-intro-exercises/lib/2048.css\">\n<script src=\"https://inimino.github.io/js-intro-exercises/lib/2048.js\"></scr"+"ipt>\n\n<div id=container>\n</div>\n\n<script>\n  // start here\n</scr"+"ipt>"
+"<!doctype html>\n<title>2048</title>\n<link rel=stylesheet href=\"https://inimino.github.io/js-intro-exercises/lib/2048.css\">\n<script src=\"https://inimino.github.io/js-intro-exercises/lib/2048.js\"></sc"+"ript>\n\n<div id=container>\n</div>\n\n<div class=\"controls\"><button id=\"up\"></button><div><button id=\"left\"></button><button id=\"down\"></button><button id=\"right\"></button></div></div>\n\n<script>\n  // start here\n</sc"+"ript>"
 </script>
 
 <p>Notice the HTML includes a 
@@ -83,7 +83,22 @@ render(html, container)
 
 <h3>Make the game playable</h3>
 
-<p>To make the game playable, you should add four buttons, up, down, left, and right.
+<p>You can make the game playable using the keyboard.
+
+<p>First, you will add a keyup event listener to the body element.
+This will capture your keyboard events from the whole page.
+
+<pre><code>
+document.body.addEventListener('keyup',function(event){
+  alert(event.keyCode)
+});
+</code></pre>
+
+<p>Use this code to find out the keyCode values for the up, down, left, and right arrow keys.
+
+
+
+<p>To make the game playable with buttons, you should add four buttons, up, down, left, and right.
 Style and place them using CSS.
 
 <p>When a button is pushed, use the move() function to get the updated state of the game.
