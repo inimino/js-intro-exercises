@@ -29,3 +29,18 @@ div.Cell.val-256 {background:#ed0;border-color:#fe1}
 div.Cell.val-512 {background:#da0;border-color:#ed2}
 div.Cell.val-1024 {background:#b5a;border-color:#109}
 div.Cell.val-2048 {background:#109;border-color:#00f}
+
+
+div.controls{
+  margin:32px auto;
+  display:flex;
+  flex-flow:column nowrap;
+  align-items:center;
+  width:256px;
+}
+
+div.controls button {
+  height:64px;
+  width:64px;
+  margin:4px;
+}

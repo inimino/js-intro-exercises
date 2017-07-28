@@ -46,20 +46,42 @@ What you need to write is the UI, or the view layer in MVC terms.
 <p>The move() function takes a game object and a move name, which can be either "up", "down", "left", or "right". You may remember it from the 2048 AI exercise yesterday.
 </ul>
 
+<h2>Instructions</h2>
+
+<h3>Make a game object</h3>
+
 <p>First, you're going to need to create an object to store the state of the game.
 You might as well create a variable, call it <code>game</code>, and use create_game() to initialize it.
+
+<h3>Turn the game object into HTML</h3>
+
+<p>Console.log the game object to understand the structure.
 
 <p>Next you are going to need to write a function that takes the game object and renders it as HTML.
 You could call this function game_html(), and it should take the game object as an argument, and return an HTML string.
 Check <a href="https://inimino.github.io/js-intro-exercises/lib/2048.css">the CSS</a> to see what elements and classes to use.
 You should create a &lt;div class="Row"> for each row in the game board, and fill it with &lt;div class="Cell"> divs, adding the "val-0" or "val-2" through "val-2048" classes as appropriate.
 
+<p>To test your <code>game_html</code> function, you should console.log the result.
+For example, you should run <code>console.log(game_html(game_object))</code>.
+
+<h3>Add the HTML onto the page</h3>
+
 <p>Next you should write a function to take your HTML string and inject it into the page, with innerHTML on the container div.
 You can call this function <code>render(html, element)</code> and pass the container element to it as the second argument.
 Your render function will just set <code>element.innerHTML = html</code>.
 
-<p>When the game starts, the board is empty except for one randomly placed 2 or 4 tile.
-You need to show that state, which means you need to write some code that generates HTML from your game state.
+<p>To call your render function, you will need to generate the HTML, and select the DOM element to inject the HTML into.
+You will have something like this:
+
+<pre><code>
+var html = game_html(game_object)
+var container = document.querySelector('#container')
+
+render(html, container)
+</code></pre>
+
+<h3>Make the game playable</h3>
 
 <p>To make the game playable, you should add four buttons, up, down, left, and right.
 Style and place them using CSS.
