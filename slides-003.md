@@ -71,7 +71,26 @@ takes the data model as an input and produces our markup as output.
       return '<div> Your entire view layer as HTML </div>'
     }
 
-This is what we did with 2048 yesterday. However...
+This is what we did with 2048 Friday.
+
+---
+
+### Demo: AirBnB with Search
+
+Start 
+[here](https://inimino.github.io/js-intro-exercises/exercises/003-AirBnB.html)
+images 
+[here](https://inimino.github.io/js-intro-exercises/airbnb/img/ff3cf70d-7d4b-4b05-b617-5c01b972f33f.jpg).
+
+--
+
+### Recap: Write the view once
+
+We write the view layer only once.
+
+This is what we did with 2048 Friday.
+
+Now we are using React. Why?
 
 --
 
@@ -80,10 +99,9 @@ This is what we did with 2048 yesterday. However...
 This might work out alright for a small enough example like our 2048 
 game, with a few dozen DOM elements at the most.
 
-But imagine that we render the Facebook front page using this approach, 
-and then a notification comes in from one of your Facebook friends, and 
-we want to update a little element on the lower right to show that 
-notification.
+But imagine Facebook...
+
+![facebook notification](slides/exercises/fb-notifications.png)
 
 --
 
@@ -92,13 +110,8 @@ notification.
 To do that, we re-render the HTML for the entire page, and then 
 completely replace the DOM for the whole page...
 
-At that point we almost might as well just reload the whole page from 
-the server.
-
-The point of AJAX was to make the page more responsive...
-
-It would be great if we could have the nice declarative style but still 
-only update the parts of the DOM that actually need to be changed.
+This is going to kill the performance of the page every time anything 
+changes.
 
 --
 
@@ -111,8 +124,8 @@ are provided by React.
 
 --
 
-The only purpose of the virtual DOM is to be compared with the previous 
-virtual DOM, and create diffs which can be applied to the actual DOM, 
+The only purpose of the virtual DOM is to be compared with the *previous* 
+virtual DOM, and create *diffs* which can be applied to the actual DOM, 
 without recreating everything on the page. This turns out to be much 
 faster.
 
@@ -155,10 +168,10 @@ that browsers understand. Specifically, into ES5.
 
 ### ES6 for free
 
-Because we are using Babel to transform our JavaScript before sending it 
-to the browser, we can also use new ES6 features, like arrow functions, 
-even though many people are still using old browser that don't support 
-these features natively.
+Because we are using [Babel](https://babeljs.io) to transform our 
+JavaScript before sending it to the browser, we can also use new ES6 
+features, like arrow functions, even though many people are still using 
+old browser that don't support these features natively.
 
 ---
 
@@ -249,21 +262,4 @@ React.render(<UserGreeting user={user}/>,
 
 ## Putting it all together
 
---
-
-### Demo: React Hello World
-
-HTML + JSX
-
---
-
-### Demo: React Hello {User} with Properties
-
---
-
-### Demo: AirBnB with Search
-
-Start 
-[here](https://inimino.github.io/js-intro-exercises/airbnb/html.txt), 
-images 
-[here](https://inimino.github.io/js-intro-exercises/airbnb/img/ff3cf70d-7d4b-4b05-b617-5c01b972f33f.jpg).
+[Create-react-app](https://github.com/facebookincubator/create-react-app)
