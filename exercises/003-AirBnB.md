@@ -16,7 +16,7 @@ Create an experience component in src/App.js above your App component which was 
 
 Your Experience component will return a greeting, which you will replace with the AirBnB experience cards later.
 
-```js
+```jsx
 function Experience(props){
   return <h1>Hello, world!</h1>
 }
