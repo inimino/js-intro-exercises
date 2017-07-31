@@ -1,7 +1,4 @@
-<!doctype html>
-
-<title>AirBnB in React</title>
-<link rel=stylesheet href=/js-intro-exercises/assets/css/style.css>
+# AirBnB in React
 
 ## Step 1 create-react app
 
