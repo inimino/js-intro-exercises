@@ -177,3 +177,7 @@ Don't be afraid to play with the API itself a bit and see what kind of data you 
 Congratulations, you've now built your first complete and useful app with React!
 
 Happy forecasting!
+
+## Bonus option
+
+Add Air Quality Index and PM2.5 data. You'll need to find and use another API for this!
