@@ -9,3 +9,4 @@ Intro to JS, DOM, and React
  - [2048 UI with React](exercises/002-2048-UI.html)
  - [AirBnB with React](exercises/003-AirBnB.html)
  - [Promo Chat](https://github.com/inimino/promo-chat)
+ - [Weather App](exercises/004-weather.md)
