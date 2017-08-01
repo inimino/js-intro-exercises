@@ -5,13 +5,16 @@
 1. How do you write a function? Write a simple function named `square` 
    that takes a parameter `x`, and returns `x*x`.
 
-      // write your function here
-      
-      
-      
-      
-      
-      console.log(square(10)) // => 100
+```js
+// write your function here
+
+
+
+
+
+
+console.log(square(10)) // => 100
+```
 
 2. You find some code for a robot assistant that listens for voice 
    commands, like Siri. What do you think the following code will do?
