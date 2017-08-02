@@ -1,6 +1,6 @@
 ## JavaScript Review
 
-## Pure JavaScript
+<!--## Pure JavaScript-->
 
 ### 1. How do you write a function?
 
@@ -18,7 +18,7 @@ that takes a parameter `x`, and returns `x*x`.
 console.log(square(10)) // => 100
 ```
 
-### 2. You are reading some code
+### 2. You are reading some code...
 for a robot assistant that listens for voice 
 commands, like Siri or Alexa. What do you think the following code will do?
 Make your best guess:
@@ -33,7 +33,7 @@ function handle_command(voice_command){
 do_something_else();
 ```
 
-Which will happen first?
+Which will happen first? Mark your answer:
 
 - the do_something_else() call
 - the console.log() call
@@ -103,9 +103,9 @@ console.log(files[README]);
 
 .
 
-### 6. Pat is writing code
+### 6. Pat needs help.
 
-to find out how many new emails there are. 
+Pat is writing code to find out how many new emails there are. 
 However, there always seems to be zero new messages. The following 
 code contains an error. What is it?
 
@@ -134,7 +134,8 @@ MailAPI.getNewMail(function(new_messages){
   console.log('length: ' + new_messages.length);
   number_of_new_messages = new_messages.length;
 });
-console.log('number: ' + number_of_new_messages); // show the count
+// show how many messages were returned by MailAPI.getNewMail()
+console.log('number: ' + number_of_new_messages);
 ```
 
   Pat finds that the length is logged as "length: 7", as expected 

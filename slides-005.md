@@ -12,7 +12,7 @@
 --
 
 - DOM
-  - Browser API for the live markup of the current page
+  - Browser API for the page
 
 --
 
@@ -22,7 +22,7 @@
 --
 
 - HTTP
-  - The protocol of the Web
+  - The Web network protocol
 
 --
 
@@ -80,7 +80,7 @@ Babel, Webpack, TypeScript, NPM, yarn, etc, etc, etc.
 
 ## Live coding: Geocoder
 
-Let's geocode
+Let's geocode!
 
 ---
 

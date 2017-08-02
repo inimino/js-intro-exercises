@@ -1,17 +1,23 @@
 ## Step 1: sign up for the API
 
-https://www.apixu.com/
+Go to [https://www.apixu.com/](https://www.apixu.com/).
 
-get API key
+This is the API we'll be using today.
+
+Like most interesting APIs, you'll need a key to use it.
+
+Sign up and get your API key.
 
 ## Step 2: Create your app
 
-Create a new project in your `code` folder.
+Create a new React project in your `code` folder.
 
 Name it `weather`.
 
-    cd ~/code
-    create-react-app weather
+```sh
+cd ~/code
+create-react-app weather
+```
 
 Get Sublime Text open and notice the directory structure is the same, 
 with src/App.js and our other friends from the create-react-app 
@@ -25,10 +31,12 @@ UI.
 
 Delete everything that is being returned from your App component except the outer div.
 
-    return (
-      <div className="App">
-      </div>
-    );
+```js
+return (
+  <div className="App">
+  </div>
+);
+```
 
 ## Step 4: Add an input
 
@@ -174,7 +182,7 @@ You could show the temperature predictions hour by hour, or even day by day for 
 
 Don't be afraid to play with the API itself a bit and see what kind of data you can get, and then build a UI around what you find.
 
-Congratulations, you've now built your first complete and useful app with React!
+Congratulations, you've now built a complete and useful app from scratch with React!
 
 Happy forecasting!
 
