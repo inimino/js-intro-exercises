@@ -80,10 +80,11 @@ Babel, Webpack, TypeScript, NPM, yarn, etc, etc, etc.
 
 ## Live coding: Geocoder
 
-Let's geocode!
+Let's [geocode](https://github.com/inimino/geocoder)!
 
 ---
 
 ## Exercise: Weather
 
-Let's build a weather app.
+Let's [build a weather 
+app](https://inimino.github.io/js-intro-exercises/exercises/004-weather.html)!
